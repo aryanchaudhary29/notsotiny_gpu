@@ -4,5 +4,8 @@ test/logs/*
 !.gitkeep
 gds/**/*.gltf
 
+venv/
+tools/
+
 .DS_Store
 results.xml

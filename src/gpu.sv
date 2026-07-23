@@ -214,4 +214,12 @@ module gpu #(
             );
         end
     endgenerate
+
+`ifdef COCOTB_SIM
+    initial begin
+        $dumpfile("build/sim.vcd");
+        $dumpvars(0, gpu);
+    end
+`endif
+
 endmodule

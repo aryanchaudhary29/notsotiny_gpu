@@ -13,7 +13,9 @@ async def setup(
     threads: int
 ):
     # Setup Clock
-    clock = Clock(dut.clk, 25, units="us")
+    # [cocotb 2.0 fix] 'units' parameter was renamed to 'unit' in cocotb 2.0.
+    # Old: Clock(dut.clk, 25, units="us")
+    clock = Clock(dut.clk, 25, unit="us")
     cocotb.start_soon(clock.start())
 
     # Reset

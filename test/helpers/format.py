@@ -99,17 +99,24 @@ def format_cycle(dut, cycle_id: int, thread_id: Optional[int] = None):
 
     for core in dut.cores:
         # Not exactly accurate, but good enough for now
-        if int(str(dut.thread_count.value), 2) <= core.i.value * dut.THREADS_PER_BLOCK.value:
+        # [cocotb 2.0 fix] In cocotb 2.0, .value returns a LogicArray object instead of int.
+        # LogicArray does not support arithmetic operators (*, +, etc.) directly.
+        # All .value accesses used in arithmetic must be wrapped with int().
+        # Old: core.i.value * dut.THREADS_PER_BLOCK.value  (worked in cocotb 1.x)
+        # New: int(core.i.value) * int(dut.THREADS_PER_BLOCK.value)
+        if int(str(dut.thread_count.value), 2) <= int(core.i.value) * int(dut.THREADS_PER_BLOCK.value):
             continue
 
-        logger.debug(f"\n+--------------------- Core {core.i.value} ---------------------+")
+        logger.debug(f"\n+--------------------- Core {int(core.i.value)} ---------------------+")
 
         instruction = str(core.core_instance.instruction.value)
         for thread in core.core_instance.threads:
             if int(thread.i.value) < int(str(core.core_instance.thread_count.value), 2): # if enabled
-                block_idx = core.core_instance.block_id.value
-                block_dim = int(core.core_instance.THREADS_PER_BLOCK)
-                thread_idx = thread.register_instance.THREAD_ID.value
+                # [cocotb 2.0 fix] Same LogicArray issue — wrap all .value in int() for arithmetic.
+                # Also: int(handle) is deprecated in 2.0, must use int(handle.value) instead.
+                block_idx = int(core.core_instance.block_id.value)
+                block_dim = int(core.core_instance.THREADS_PER_BLOCK.value)
+                thread_idx = int(thread.register_instance.THREAD_ID.value)
                 idx = block_idx * block_dim + thread_idx
 
                 rs = int(str(thread.register_instance.rs.value), 2)
