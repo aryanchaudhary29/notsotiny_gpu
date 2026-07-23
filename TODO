@@ -1,0 +1,13 @@
+RTL Feature Additions:
+    -   Branch Divergence.
+    -   Warp Scheduling.
+    -   Memory Coalasing (?)
+
+DV Plan
+    -   Write a mini assembler for code compilation.
+    -   Swtich the simulator to Verilator.
+    -   Verify the design using UVM.
+
+FPGA Demo
+    -   Make the RTL Synthenizable.
+    -   Render a graphic program on a monitor through VGA or HDMI.
